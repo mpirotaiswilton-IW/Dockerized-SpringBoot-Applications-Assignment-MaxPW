@@ -10,7 +10,7 @@ This Github repository contains two Springboot APIs that can be dockerized:
 ### Installation
 
 1. if not already installed, install Docker on your device (you can use the following link for a guide: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/))
-2. Clone this repository or download the .zip file from Github (extract the downloaaded zip file)
+2. Clone this repository or download the .zip file from GitHub (extract the downloaaded zip file)
 
 ### Running Hello-World
 
