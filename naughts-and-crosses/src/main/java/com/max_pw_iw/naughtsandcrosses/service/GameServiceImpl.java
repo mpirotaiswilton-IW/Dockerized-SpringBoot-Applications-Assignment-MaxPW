@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
+import com.max_pw_iw.naughtsandcrosses.entity.GameRequest;
 import com.max_pw_iw.naughtsandcrosses.entity.GameState;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
 import com.max_pw_iw.naughtsandcrosses.exception.EntityNotFoundException;
@@ -17,7 +18,7 @@ import com.max_pw_iw.naughtsandcrosses.exception.IllegalMoveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalUserJoinException;
 import com.max_pw_iw.naughtsandcrosses.repository.GameRepository;
 // import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
-import com.max_pw_iw.naughtsandcrosses.validation.Move;
+//import com.max_pw_iw.naughtsandcrosses.validation.Move;
 
 import lombok.AllArgsConstructor;
 
@@ -35,7 +36,10 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public Game createGame(Game game, String username) {
+    public Game createGame(GameRequest request, String username) {
+
+        Game game = new Game(request.getIsOpponentHuman() , request.getDoesPrimaryUserStart() , request.getIsPrimaryUserOs());
+
         User user = userService.getUser(username);
         game.setPrimaryUser(user);
         return gameRepository.save(game);
@@ -59,7 +63,13 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public Game addMove(long id, int move, String username) {
+
         User user = userService.getUser(username);
+
+        if(move > 9 || move < 1){
+            throw new IllegalMoveException(move, user);
+        }
+
         Optional<Game> game = gameRepository.findById(id);
         Game unwrappedGame = unwrapGame(game, id);
         if (unwrappedGame.getGameState() != GameState.ACTIVE){
@@ -67,6 +77,26 @@ public class GameServiceImpl implements GameService{
         }
         return gameRepository.save(updateGameMoves(unwrappedGame, move, user));
     }
+
+
+    @Override
+    public Game forfeitGame(long id, String username) {
+        User user = userService.getUser(username);
+        Optional<Game> game = gameRepository.findById(id);
+        Game unwrappedGame = unwrapGame(game, id);
+        if(user == unwrappedGame.getPrimaryUser()){
+            unwrappedGame.setLastActionDate(LocalDate.now());
+            unwrappedGame.setDateEnded(LocalDate.now());
+            unwrappedGame.setGameState(GameState.SECONDARY_WIN);
+        } else if(user == unwrappedGame.getSecondaryUser()){
+            unwrappedGame.setLastActionDate(LocalDate.now());
+            unwrappedGame.setDateEnded(LocalDate.now());
+            unwrappedGame.setGameState(GameState.PRIMARY_WIN);
+        }
+
+
+        return unwrappedGame;
+    } 
 
     @Override
     public void deleteGame(long id) {
@@ -216,10 +246,12 @@ public class GameServiceImpl implements GameService{
                 }
             }
         }
-        //Check if moves are full
+        //Check if moves are full when no victory state has been returned
         if(moves[moves.length-1] != null){
             return GameState.DRAW;
         }
+
+        //if here, Game must still be in progress
         return GameState.ACTIVE;
     } 
 
@@ -235,6 +267,7 @@ public class GameServiceImpl implements GameService{
             }
         }
         return orderedMoves;
-    } 
+    }
+
 
 }

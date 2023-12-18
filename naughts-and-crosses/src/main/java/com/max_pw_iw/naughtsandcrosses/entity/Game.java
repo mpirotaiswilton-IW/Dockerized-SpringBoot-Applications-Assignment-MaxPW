@@ -1,7 +1,6 @@
 package com.max_pw_iw.naughtsandcrosses.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,14 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -44,16 +38,12 @@ public class Game {
     @Column(name = "last_action_date", nullable = true)
     private LocalDate lastActionDate;
 
-    @NotNull(message = "opponent humanity must be decided")
     @Column(name = "is_opponent_human", nullable = false)
     private boolean isOpponentHuman;
       
-    
-    @NotNull(message = "player order must be defined")
     @Column(name = "does_primary_user_start", nullable = false)
     private boolean doesPrimaryUserStart;
 
-    @NotNull(message = "player identity must be defined")
     @Column(name = "is_primary_user_Os", nullable = false)
     private boolean isPrimaryUserOs;
 
@@ -78,6 +68,7 @@ public class Game {
         this.isPrimaryUserOs = isPrimaryUserOs;
         if(!isOpponentHuman){
             this.gameState = GameState.ACTIVE;
+            this.dateStarted = LocalDate.now();
         }
     }
 

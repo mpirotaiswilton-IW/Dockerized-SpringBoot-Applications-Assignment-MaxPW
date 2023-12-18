@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,6 +46,7 @@ public class User {
 
 	@NotBlank(message =  "password cannot be blank")
     @NonNull
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
 
@@ -53,6 +56,6 @@ public class User {
 
 	@JsonIgnore
     @OneToMany(mappedBy = "secondaryUser", cascade = CascadeType.ALL)
-    private List<Game> joined;
+    private List<Game> joinedGames;
 
 }
