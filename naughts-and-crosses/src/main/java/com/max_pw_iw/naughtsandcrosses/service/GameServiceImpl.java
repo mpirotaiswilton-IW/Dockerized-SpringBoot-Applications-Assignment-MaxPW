@@ -16,6 +16,7 @@ import com.max_pw_iw.naughtsandcrosses.exception.EntityNotFoundException;
 import com.max_pw_iw.naughtsandcrosses.exception.GameNotActiveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalMoveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalUserJoinException;
+import com.max_pw_iw.naughtsandcrosses.exception.UserNotPlayerException;
 import com.max_pw_iw.naughtsandcrosses.repository.GameRepository;
 // import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
 //import com.max_pw_iw.naughtsandcrosses.validation.Move;
@@ -38,7 +39,7 @@ public class GameServiceImpl implements GameService{
     @Override
     public Game createGame(GameRequest request, String username) {
 
-        Game game = new Game(request.getIsOpponentHuman() , request.getDoesPrimaryUserStart() , request.getIsPrimaryUserOs());
+        Game game = new Game(request.getDoesPrimaryUserStart() , request.getIsPrimaryUserOs());
 
         User user = userService.getUser(username);
         game.setPrimaryUser(user);
@@ -74,7 +75,7 @@ public class GameServiceImpl implements GameService{
         Game unwrappedGame = unwrapGame(game, id);
         if (unwrappedGame.getGameState() != GameState.ACTIVE){
             throw new GameNotActiveException(id, unwrappedGame.getGameState());
-        }
+        } /*else if(user == unwrappedGame.getPrimaryUser()) */
         return gameRepository.save(updateGameMoves(unwrappedGame, move, user));
     }
 
@@ -92,17 +93,24 @@ public class GameServiceImpl implements GameService{
             unwrappedGame.setLastActionDate(LocalDate.now());
             unwrappedGame.setDateEnded(LocalDate.now());
             unwrappedGame.setGameState(GameState.PRIMARY_WIN);
+        } else if(unwrappedGame.getGameState() != GameState.ACTIVE){
+            throw new GameNotActiveException(id, unwrappedGame.getGameState());
+        }else{
+            throw new UserNotPlayerException(user);
         }
-
-
         return unwrappedGame;
     } 
 
     @Override
-    public void deleteGame(long id) {
+    public void deleteGame(long id, String username) {
+        User user = userService.getUser(username);
         Optional<Game> game = gameRepository.findById(id);
         Game unwrappedGame = unwrapGame(game, id);
-        gameRepository.delete(unwrappedGame);
+        if(user == unwrappedGame.getPrimaryUser()){
+            gameRepository.delete(unwrappedGame);
+        } else {
+            throw new UserNotPlayerException(user);
+        }
     }
 
 
@@ -122,7 +130,7 @@ public class GameServiceImpl implements GameService{
             if(game.getMoves()[i] == null){
                 if(i  == 0){
                     // if this is the first move,
-                    // check for who starts bool and
+                    // check for who starts boolean and
                     // check which user is the authenticated user
 
                     if(!game.isDoesPrimaryUserStart() && game.getSecondaryUser() == user){
@@ -133,7 +141,7 @@ public class GameServiceImpl implements GameService{
                         stringMove = stringMove.concat(game.isPrimaryUserOs() ? "O" : "X");
 
                     } else{
-                        throw new IllegalMoveException(move, user);
+                        throw new UserNotPlayerException(user);
                     }
                 } else {
                     // else,
@@ -148,7 +156,7 @@ public class GameServiceImpl implements GameService{
                         stringMove = stringMove.concat(game.isPrimaryUserOs() ? "O" : "X");
 
                     } else{
-                        throw new IllegalMoveException(move, user);
+                        throw new UserNotPlayerException(user);
                     }
                 }
 

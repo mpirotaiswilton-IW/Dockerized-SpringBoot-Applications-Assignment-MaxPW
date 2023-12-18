@@ -9,5 +9,5 @@ public interface GameService {
     Game joinGame(long id, String username);
     Game addMove(long id, int move, String username);
     Game forfeitGame(long id, String username);
-    void deleteGame(long id);
+    void deleteGame(long id, String username);
 }

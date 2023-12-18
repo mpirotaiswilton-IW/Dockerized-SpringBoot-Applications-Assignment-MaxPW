@@ -1,12 +1,11 @@
 package com.max_pw_iw.naughtsandcrosses.web;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
 import com.max_pw_iw.naughtsandcrosses.entity.GameRequest;
 import com.max_pw_iw.naughtsandcrosses.service.GameService;
-import com.max_pw_iw.naughtsandcrosses.validation.Move;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,13 +34,13 @@ public class GameController {
 	}
 
     @PostMapping("/")
-	public ResponseEntity<Long> createGame(@Valid @RequestBody GameRequest game, Authentication authentication) {
-		return new ResponseEntity<>(gameService.createGame(game, authentication.getName()).getId(), HttpStatus.CREATED);
+	public ResponseEntity<Game> createGame(@Valid @RequestBody GameRequest game, Authentication authentication) {
+		return new ResponseEntity<>(gameService.createGame(game, authentication.getName()), HttpStatus.CREATED);
 	}
 
 	@PutMapping("join/{id}")
-	public ResponseEntity<Long> joinGame(@PathVariable Long id, Authentication authentication) {
-		return new ResponseEntity<>(gameService.joinGame(id, authentication.getName()).getId(), HttpStatus.OK);
+	public ResponseEntity<Game> joinGame(@PathVariable Long id, Authentication authentication) {
+		return new ResponseEntity<>(gameService.joinGame(id, authentication.getName()), HttpStatus.OK);
 	}
 	// move format: (squareNum) + "_" + (primaryUsersTurn==true ? 1 : 2)+(isOsTurn == true ? "O" : "X")
 
@@ -53,7 +51,13 @@ public class GameController {
 
 	@PutMapping("forfeit/{id}")
 	public ResponseEntity<Game> forfeitGame(@PathVariable Long id, Authentication authentication) {
-				return new ResponseEntity<>(gameService.forfeitGame(id, authentication.getName()), HttpStatus.OK);
+		return new ResponseEntity<>(gameService.forfeitGame(id, authentication.getName()), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<HttpStatus> deleteGame(@PathVariable Long id, Authentication authentication) {
+		gameService.deleteGame(id, authentication.getName());
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

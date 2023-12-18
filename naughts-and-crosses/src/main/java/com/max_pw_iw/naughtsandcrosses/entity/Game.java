@@ -38,8 +38,8 @@ public class Game {
     @Column(name = "last_action_date", nullable = true)
     private LocalDate lastActionDate;
 
-    @Column(name = "is_opponent_human", nullable = false)
-    private boolean isOpponentHuman;
+    // @Column(name = "is_opponent_human", nullable = false)
+    // private boolean isOpponentHuman;
       
     @Column(name = "does_primary_user_start", nullable = false)
     private boolean doesPrimaryUserStart;
@@ -62,14 +62,14 @@ public class Game {
 	private User secondaryUser;
 
 
-    public Game(boolean isOpponentHuman, boolean doesPrimaryUserStart, boolean isPrimaryUserOs) {
-        this.isOpponentHuman = isOpponentHuman;
+    public Game(boolean doesPrimaryUserStart, boolean isPrimaryUserOs) {
+        // this.isOpponentHuman = isOpponentHuman;
         this.doesPrimaryUserStart = doesPrimaryUserStart;
         this.isPrimaryUserOs = isPrimaryUserOs;
-        if(!isOpponentHuman){
-            this.gameState = GameState.ACTIVE;
-            this.dateStarted = LocalDate.now();
-        }
+        // if(!isOpponentHuman){
+        //     this.gameState = GameState.ACTIVE;
+        //     this.dateStarted = LocalDate.now();
+        // }
     }
 
 }

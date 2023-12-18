@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GameRequest {
     
-    @NonNull
-    @NotNull(message = "opponent humanity must be decided")
-    private Boolean isOpponentHuman;
+    // @NonNull
+    // @NotNull(message = "opponent humanity must be decided")
+    // private Boolean isOpponentHuman;
 
     @NonNull
     @NotNull(message = "player order must be defined")

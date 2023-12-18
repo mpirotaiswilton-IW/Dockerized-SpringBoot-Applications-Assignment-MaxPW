@@ -1,20 +1,20 @@
 package com.max_pw_iw.naughtsandcrosses;
 
-import java.time.LocalDate;
+// import java.time.LocalDate;
 
-import org.springframework.boot.CommandLineRunner;
+// import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.max_pw_iw.naughtsandcrosses.entity.User;
+// import com.max_pw_iw.naughtsandcrosses.entity.User;
 import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
 @SpringBootApplication @AllArgsConstructor
-public class NaughtsAndCrossesApplication implements CommandLineRunner {
+public class NaughtsAndCrossesApplication{
 
 	UserRepository userRepository;
 
@@ -22,17 +22,17 @@ public class NaughtsAndCrossesApplication implements CommandLineRunner {
 		SpringApplication.run(NaughtsAndCrossesApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		//TODO: add admin level user + archived games
-		BCryptPasswordEncoder tempBCryptPasswordEncoder = new BCryptPasswordEncoder();
+	// @Override
+	// public void run(String... args) throws Exception {
 
-		User admin = new User("DEV_ADMIN", tempBCryptPasswordEncoder.encode("admin_pass"));
-		userRepository.save(admin);
-	}
+	// 	BCryptPasswordEncoder tempBCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	// 	User admin = new User("DEV_ADMIN", tempBCryptPasswordEncoder.encode("admin_pass"));
+	// 	userRepository.save(admin);
+	// }
+
+	// @Bean
+	// public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	// 	return new BCryptPasswordEncoder();
+	// }
 }
