@@ -37,6 +37,11 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
+    public List<Game> getAllGames() {
+        return (List<Game>) gameRepository.findAll();
+    }
+
+    @Override
     public Game createGame(GameRequest request, String username) {
 
         Game game = new Game(request.getDoesPrimaryUserStart() , request.getIsPrimaryUserOs());

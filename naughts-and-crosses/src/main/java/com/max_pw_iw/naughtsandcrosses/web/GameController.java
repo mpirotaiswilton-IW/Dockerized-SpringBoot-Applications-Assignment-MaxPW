@@ -42,7 +42,6 @@ public class GameController {
 	public ResponseEntity<Game> joinGame(@PathVariable Long id, Authentication authentication) {
 		return new ResponseEntity<>(gameService.joinGame(id, authentication.getName()), HttpStatus.OK);
 	}
-	// move format: (squareNum) + "_" + (primaryUsersTurn==true ? 1 : 2)+(isOsTurn == true ? "O" : "X")
 
 	@PutMapping("/{id}/play/{move}")
 	public ResponseEntity<String[]> playMove(@PathVariable("id") Long id, @PathVariable("move") Integer move, Authentication authentication) {

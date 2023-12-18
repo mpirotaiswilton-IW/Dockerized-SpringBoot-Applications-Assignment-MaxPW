@@ -124,8 +124,48 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Fetch All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch All Games From User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/user/1/games",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"1",
+								"games"
+							]
+						}
+					},
+					"response": []
 				}
-			]
+			],
+			"description": "Endpoints for users"
 		},
 		{
 			"name": "Game",
@@ -169,7 +209,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Game",
+					"name": "Fetch Game",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -192,6 +232,25 @@
 							"path": [
 								"game",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch All Games",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/game/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game",
+								""
 							]
 						}
 					},
@@ -317,7 +376,8 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Endpoints for Games"
 		}
 	]
 }

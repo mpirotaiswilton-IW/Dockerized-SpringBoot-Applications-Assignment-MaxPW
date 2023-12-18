@@ -1,5 +1,7 @@
 package com.max_pw_iw.naughtsandcrosses.web;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.max_pw_iw.naughtsandcrosses.entity.Game;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
 import com.max_pw_iw.naughtsandcrosses.service.UserService;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @AllArgsConstructor
 @RestController
@@ -29,10 +34,22 @@ public class UserController {
 		return new ResponseEntity<>(userName, HttpStatus.OK);
 	}
 
+	@GetMapping("/")
+	public ResponseEntity<List<User>> getAllUserName(@RequestParam String param) {
+		return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}/games")
+	public ResponseEntity<List<Game>> getMethodName(@RequestParam Long id) {
+		return new ResponseEntity<>(userService.getAllGamesFromUser(id), HttpStatus.OK);
+	}
+
     @PostMapping("/register")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		userService.saveUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+
+
 
 }
