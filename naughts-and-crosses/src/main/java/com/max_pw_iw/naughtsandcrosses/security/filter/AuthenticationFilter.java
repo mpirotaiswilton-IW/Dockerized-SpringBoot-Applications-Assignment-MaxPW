@@ -21,9 +21,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
+import com.max_pw_iw.naughtsandcrosses.entity.UserRequest;
+import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
 import com.max_pw_iw.naughtsandcrosses.security.SecurityConstants;
 import com.max_pw_iw.naughtsandcrosses.security.manager.CustomAuthenticationManager;
 
+import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -34,7 +37,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+            UserRequest user = new ObjectMapper().readValue(request.getInputStream(), UserRequest.class);
             Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
             return authenticationManager.authenticate(authentication);
         } catch (IOException e) {
@@ -47,6 +50,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
         String token = JWT.create()
                 .withSubject(authResult.getName())
                 .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
+                // .withClaim("roles", authResult.getAuthorities().toString())
                 .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
         response.addHeader(SecurityConstants.AUTHORIZATION,SecurityConstants.BEARER + token);
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
+import com.max_pw_iw.naughtsandcrosses.entity.UserRequest;
 import com.max_pw_iw.naughtsandcrosses.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -35,17 +36,17 @@ public class UserController {
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<List<User>> getAllUserName(@RequestParam String param) {
+	public ResponseEntity<List<User>> getAllUserName() {
 		return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}/games")
-	public ResponseEntity<List<Game>> getMethodName(@RequestParam Long id) {
+	public ResponseEntity<List<Game>> getAllGamesFromUser(@RequestParam Long id) {
 		return new ResponseEntity<>(userService.getAllGamesFromUser(id), HttpStatus.OK);
 	}
 
     @PostMapping("/register")
-	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+	public ResponseEntity<User> createUser(@Valid @RequestBody UserRequest user) {
 		userService.saveUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}

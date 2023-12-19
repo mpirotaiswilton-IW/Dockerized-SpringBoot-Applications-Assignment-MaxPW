@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.max_pw_iw.naughtsandcrosses.security.filter.AuthenticationFilter;
 import com.max_pw_iw.naughtsandcrosses.security.filter.ExceptionHandlerFilter;
@@ -33,10 +34,11 @@ public class SecurityConfig {
                 .authorizeRequests(requests -> requests
                         .antMatchers("/h2/**").permitAll() // New Line: allows us to access the h2 console without the need to authenticate. ' ** '  instead of ' * ' because multiple path levels will follow /h2.
                         .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
+                        .antMatchers(HttpMethod.GET, "/user/").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(authenticationFilter)
-                .addFilterAfter(new JWTAuthorizationFilter(), AuthenticationFilter.class)
+                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
