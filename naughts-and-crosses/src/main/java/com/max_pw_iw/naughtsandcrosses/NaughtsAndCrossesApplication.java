@@ -50,6 +50,10 @@ public class NaughtsAndCrossesApplication implements CommandLineRunner{
 		Set<Role> roles = new HashSet<Role>(roleList);
 
 		admin.setRoles(roles);
-		userRepository.save(admin);
+		try{
+			userRepository.save(admin);
+		} catch (RuntimeException e){
+			
+		} 
 	}
 }

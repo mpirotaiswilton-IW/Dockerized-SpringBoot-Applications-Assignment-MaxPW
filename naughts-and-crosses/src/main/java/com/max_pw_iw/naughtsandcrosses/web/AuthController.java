@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.max_pw_iw.naughtsandcrosses.dto.AuthRequest;
 import com.max_pw_iw.naughtsandcrosses.security.TokenProvider;
-import com.max_pw_iw.naughtsandcrosses.service.UserService;
 
 import lombok.AllArgsConstructor;
 
@@ -23,7 +22,6 @@ public class AuthController {
 
     private AuthenticationManager authenticationManager;
     private TokenProvider jwtTokenUtil;
-    private UserService userService;
 
     @PostMapping("/authenticate")
 	public ResponseEntity<String> createUser(@Valid @RequestBody AuthRequest user) {

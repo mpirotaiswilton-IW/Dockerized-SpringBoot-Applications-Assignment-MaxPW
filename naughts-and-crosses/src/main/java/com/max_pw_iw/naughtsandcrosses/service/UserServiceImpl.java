@@ -1,6 +1,5 @@
 package com.max_pw_iw.naughtsandcrosses.service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +7,6 @@ import java.util.Set;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +31,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getUser(Long id) {
         Optional<User> user = userRepository.findById(id);
-        User unwrappedUser = unwrapUser(user, id);
         return unwrapUser(user, id);
     }
 
     @Override
     public User getUser(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        User unwrappedUser = unwrapUser(user, username);
         return unwrapUser(user, username);
     }
 
