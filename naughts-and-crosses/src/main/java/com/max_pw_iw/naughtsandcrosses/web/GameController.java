@@ -1,5 +1,7 @@
 package com.max_pw_iw.naughtsandcrosses.web;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.max_pw_iw.naughtsandcrosses.dto.GameRequest;
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
-import com.max_pw_iw.naughtsandcrosses.entity.GameRequest;
 import com.max_pw_iw.naughtsandcrosses.service.GameService;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +34,12 @@ public class GameController {
 	public ResponseEntity<Game> GetGameById(@PathVariable Long id) {
 		return new ResponseEntity<>(gameService.getGame(id), HttpStatus.OK);
 	}
+
+	@GetMapping("/")
+	public ResponseEntity<List<Game>> GetAllGames() {
+		return new ResponseEntity<>(gameService.getAllGames(), HttpStatus.OK);
+	}
+
 
     @PostMapping("/")
 	public ResponseEntity<Game> createGame(@Valid @RequestBody GameRequest game, Authentication authentication) {
@@ -55,7 +63,7 @@ public class GameController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpStatus> deleteGame(@PathVariable Long id, Authentication authentication) {
-		gameService.deleteGame(id, authentication.getName());
+		gameService.deleteGame(id, authentication.getName(), authentication.getAuthorities());
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

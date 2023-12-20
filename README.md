@@ -49,7 +49,7 @@ docker-compose up
 #### Playing a game (using Postman)
 
 1. Register 2 new users by running the "Register User 1" and "Register User 2" requests (localhost:8080/user/register/). By default, these requests will create 2 new users called "foo" and "bar" with their own passwords. Feel free to change these if you wish. A successful request will return a "201 Created" response.
-2. Authenticate for each new user by using the "Authenticate User" request (localhost:8080/authenticate), filling in the request body with their respective credentials (by default the request body is populated with the credentials for a user called "foo"). Sending a successful request should yield a 200 OK response and a response Header called Authorization with a bearer token value: Copy the token value (the long string after the word 'Bearer') for later use. A Token for this API will last for 12 hours.
+2. Authenticate for each new user by using the "Authenticate User" request (localhost:8080/authenticate), filling in the request body with their respective credentials (by default the request body is populated with the credentials for a user called "foo"). Sending a successful request should yield a 200 OK response and a bearer token in the response body: Copy the token value and paste it somewhere for later use. A Token for this API will last for 12 hours.
 3. Create a new game using the "Create Game" request (localhost:8080/game/). Under Postman's Authorization
 tab for the request or in the Authorization header, put the bearer token of the user who is creating the game (eg. user foo or bar). Inside the request body, define some game settings such as whether the player creating the new game starts first or are playing as naughts or crosses. A successful request should return a 201 Created response along with a JSON object of the newly created game.
 4. Have a second user join the newly created game using the "Join Game" (localhost:8080/game/join/{game id}). Under Postman's Authorization tab for the request or in the Authorization header, put the bearer token of the other user who is joining the game. A successful request should return a 200 OK response along with a JSON object of the newly created game.
@@ -64,6 +64,17 @@ ASCII visual representation:
 7 | 8 | 9
 ```
 5. (Cont') A successful move will return a 200 OK response and a list of all moves played in  chronological order. Players become unable to submit a move when the game has been won or been deemed a draw, where all squares are filled and no winning position has been achieved. 
-6. (Optional) Users can also forfeit a game if they so choose using the "Forfeit Game" request (localhost:8080/game/forfeit/{game id}). Under Postman's Authorization tab for the request or in the Authorization header, put the bearer token of the user who is forfeiting the game (this user must be one of the players). A successful request should return a 200 OK response along with a JSON object of the forfeited game.
-7. (Optional) Any user who created a game can also delete it at any time using the "Delete Game" request (localhost:8080/game/delete/{game id}). Under Postman's Authorization tab for the request or in the Authorization header, put the bearer token of the user who is deleting the game they created. A successful request should return a 204 OK response.
+
+#### Optional Endpoints
+
+* Users can also forfeit a game if they so choose using the "Forfeit Game" request (localhost:8080/game/forfeit/{game id}). Under Postman's Authorization tab for the request or in the Authorization header, put the bearer token of the user who is forfeiting the game (this user must be one of the players). A successful request should return a 200 OK response along with a JSON object of the forfeited game.
+* Any user who created a game can also delete it at any time using the "Delete Game" request (localhost:8080/game/delete/{game id}). Under Postman's Authorization tab for the request or in the Authorization header, put the bearer token of the user who is deleting the game they created. A successful request should return a 204 NO_CONTENT response.
+* Any given user can delete themselves from the API's database with the "Delete User Self" request (localhost:8080/user/). Under Postman's Authorization tab for the request or in the Authorization header, put the bearer token of the user who wants to delete itself. A successful request should return a 204 NO_CONTENT response.
+
+#### Role-based Authentication
+
+The Naughts-and-crosses API also includes role-based authentication. This enables users with different roles to access different endpoints, or have the same endpoint behave differently.
+
+1. The API already adds a user with administrative privileges, with a username of "DEV_ADMIN" and password "admin_pass". 
+2. Authenticate "DEV_ADMIN" by using the "Authenticate User" request (localhost:8080/authenticate), filling in the request body with the credentials above. Sending a successful request should yield a 200 OK response and a bearer token in the response body: Copy the token value and paste it somewhere for later use.
 

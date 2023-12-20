@@ -1,4 +1,4 @@
-package com.max_pw_iw.naughtsandcrosses.entity;
+package com.max_pw_iw.naughtsandcrosses.dto;
 
 import javax.validation.constraints.NotNull;
 

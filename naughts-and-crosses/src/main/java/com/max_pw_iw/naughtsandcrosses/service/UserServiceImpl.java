@@ -1,25 +1,29 @@
 package com.max_pw_iw.naughtsandcrosses.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.max_pw_iw.naughtsandcrosses.dto.UserRequest;
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
 import com.max_pw_iw.naughtsandcrosses.entity.Role;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
-import com.max_pw_iw.naughtsandcrosses.entity.UserRequest;
 import com.max_pw_iw.naughtsandcrosses.exception.EntityNotFoundException;
 import com.max_pw_iw.naughtsandcrosses.repository.RoleRepository;
 import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
-@Service
+@Service(value = "userService")
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(UserRequest userRequest) {
         User user = new User(userRequest.getUsername(), userRequest.getPassword());
-        user.addRole(roleRepository.findById(1L).get());
+        user.addRole(unwrapRole(roleRepository.findByName("PLAYER"), 404L));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -78,6 +82,24 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(unwrappedUser);
     }
 
+    @Override
+    public void deleteUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        User unwrappedUser = unwrapUser(user, username);
+        userRepository.delete(unwrappedUser);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        User unwrappedUser = unwrapUser(user, username);
+        return new org.springframework.security.core.userdetails.User(
+            unwrappedUser.getUsername(),
+            unwrappedUser.getPassword(),
+            getAuthority(unwrappedUser)
+        );
+    }
+
     static User unwrapUser(Optional<User> entity, Long id) {
         if (entity.isPresent()) return entity.get();
         else throw new EntityNotFoundException(id, User.class);
@@ -93,15 +115,13 @@ public class UserServiceImpl implements UserService {
         else throw new EntityNotFoundException(id, Role.class);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        User unwrappedUser = unwrapUser(user, username);
-        return new org.springframework.security.core.userdetails.User(
-            unwrappedUser.getUsername(),
-            unwrappedUser.getPassword(),
-            unwrappedUser.getAuthorities()
-        );
+    // Get user authorities
+    private Set<SimpleGrantedAuthority> getAuthority(User user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        });
+        return authorities;
     }
 }
 

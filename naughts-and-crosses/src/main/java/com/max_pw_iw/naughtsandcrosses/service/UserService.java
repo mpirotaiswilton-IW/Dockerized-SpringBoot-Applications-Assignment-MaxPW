@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
 
+import com.max_pw_iw.naughtsandcrosses.dto.UserRequest;
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
-import com.max_pw_iw.naughtsandcrosses.entity.UserRequest;
 
-@Service
 public interface UserService extends UserDetailsService{
     User getUser(Long id);
     User getUser(String username);
@@ -20,4 +18,5 @@ public interface UserService extends UserDetailsService{
     User saveUser(UserRequest user);
     User addRoleToUser(Long id, Long roleId);
     void deleteUser(Long id);
+    void deleteUser(String username);
 }

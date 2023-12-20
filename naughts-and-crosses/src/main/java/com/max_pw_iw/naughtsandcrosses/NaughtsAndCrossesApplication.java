@@ -1,6 +1,5 @@
 package com.max_pw_iw.naughtsandcrosses;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -29,8 +28,6 @@ public class NaughtsAndCrossesApplication implements CommandLineRunner{
 		SpringApplication.run(NaughtsAndCrossesApplication.class, args);
 	}
 
-	
-
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -46,14 +43,13 @@ public class NaughtsAndCrossesApplication implements CommandLineRunner{
 
 		User admin = new User("DEV_ADMIN", tempBCryptPasswordEncoder.encode("admin_pass"));
 		
-		roleRepository.save(playerRole);
-		roleRepository.save(adminRole);
+		// roleRepository.save(playerRole);
+		// roleRepository.save(adminRole);
 
-		List<Role> roleList = (List<Role>) roleRepository.findAll();
+		List<Role> roleList = Arrays.asList(playerRole,adminRole);
 		Set<Role> roles = new HashSet<Role>(roleList);
 
 		admin.setRoles(roles);
 		userRepository.save(admin);
-		User adminInRepo = userRepository.findById(1L).get();
 	}
 }

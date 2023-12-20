@@ -1,6 +1,5 @@
 package com.max_pw_iw.naughtsandcrosses.entity;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,10 +18,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,7 +35,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class User implements UserDetails{
+public class User{
 
     @Id
 	@Column(name = "id")
@@ -65,7 +61,7 @@ public class User implements UserDetails{
     @OneToMany(mappedBy = "secondaryUser", cascade = CascadeType.ALL)
     private List<Game> joinedGames;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
 		name = "roles_users",
 		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -79,35 +75,6 @@ public class User implements UserDetails{
 
 	public void addRoles(Collection<Role> roles){
 		this.roles.addAll(roles);
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		for (Role role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role.getName()));
-		}
-		return authorities;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {		
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
 	}
 
 }

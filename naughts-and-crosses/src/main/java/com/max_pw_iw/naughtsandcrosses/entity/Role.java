@@ -1,6 +1,5 @@
 package com.max_pw_iw.naughtsandcrosses.entity;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;

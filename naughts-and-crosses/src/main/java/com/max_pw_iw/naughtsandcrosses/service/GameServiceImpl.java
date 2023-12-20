@@ -3,13 +3,15 @@ package com.max_pw_iw.naughtsandcrosses.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.max_pw_iw.naughtsandcrosses.dto.GameRequest;
 import com.max_pw_iw.naughtsandcrosses.entity.Game;
-import com.max_pw_iw.naughtsandcrosses.entity.GameRequest;
 import com.max_pw_iw.naughtsandcrosses.entity.GameState;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
 import com.max_pw_iw.naughtsandcrosses.exception.EntityNotFoundException;
@@ -107,10 +109,18 @@ public class GameServiceImpl implements GameService{
     } 
 
     @Override
-    public void deleteGame(long id, String username) {
-        User user = userService.getUser(username);
+    public void deleteGame(long id, String username, Collection<? extends GrantedAuthority> authorities) {
+
         Optional<Game> game = gameRepository.findById(id);
         Game unwrappedGame = unwrapGame(game, id);
+
+        if(authorities.toString().contains("ADMIN")){
+            gameRepository.delete(unwrappedGame);
+            return;
+        }
+
+        User user = userService.getUser(username);
+        
         if(user == unwrappedGame.getPrimaryUser()){
             gameRepository.delete(unwrappedGame);
         } else {
