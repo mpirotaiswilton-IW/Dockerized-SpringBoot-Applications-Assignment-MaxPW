@@ -9,7 +9,14 @@ This Github repository contains two Springboot APIs that can be dockerized:
 
 [Dockerized-SpringBoot-Applications-Assignment-MaxPW](#dockerized-springboot-applications-assignment-maxpw)
 * [Summary](#summary)
-* [Setup](#setup)
+* [Setup and Pre-requisites](#setup-and-pre-requisites)
+* [Running Hello-World](#running-hello-world)
+* [Running Naughts-and-crosses](#running-naughts-and-crosses)
+    * [Playing a game using Postman](#playing-a-game-using-postman)
+        * [Optional Endpoints](#optional-endpoints)
+    * [Role-Based Authorization](#role-based-authentication)
+        * [Admin Endpoints](#admin-endpoints)
+    * [Accessing the pgAdmin Dashboard](#accessing-the-pgadmin-dashboard)
 
 
 ## Setup and Pre-requisites
