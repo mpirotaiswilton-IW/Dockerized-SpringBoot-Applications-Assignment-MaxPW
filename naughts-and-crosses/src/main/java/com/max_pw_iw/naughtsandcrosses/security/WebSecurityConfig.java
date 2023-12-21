@@ -37,8 +37,8 @@ public class WebSecurityConfig{
     public  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
-                .antMatchers(HttpMethod.POST, "/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_AUTHENTICATE_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()

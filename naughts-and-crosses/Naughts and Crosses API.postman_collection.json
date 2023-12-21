@@ -72,7 +72,104 @@
 					"response": []
 				},
 				{
-					"name": "Authenticate User",
+					"name": "Authenticate User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token_user_1\", jsonData.result.ks);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"foo\",\r\n    \"password\":\"fooword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/authenticate",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token_user_2\", jsonData.result.ks);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"foo\",\r\n    \"password\":\"fooword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/authenticate",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate Admin level User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token_admin\", jsonData.result.ks);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -197,7 +294,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_admin}}",
 									"type": "string"
 								}
 							]
@@ -226,7 +323,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_user_2}}",
 									"type": "string"
 								}
 							]
@@ -253,44 +350,6 @@
 		{
 			"name": "Game",
 			"item": [
-				{
-					"name": "Create Game",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"doesPrimaryUserStart\" : true,\r\n    \"isPrimaryUserOs\" : false\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/game/",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"game",
-								""
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Fetch Game",
 					"request": {
@@ -328,13 +387,51 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_user_1}}",
 									"type": "string"
 								}
 							]
 						},
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "localhost:8080/game/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token_user_1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doesPrimaryUserStart\" : true,\r\n    \"isPrimaryUserOs\" : true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:8080/game/",
 							"host": [
@@ -357,7 +454,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_user_2}}",
 									"type": "string"
 								}
 							]
@@ -380,14 +477,14 @@
 					"response": []
 				},
 				{
-					"name": "Play Move",
+					"name": "Play Move User 1",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_user_1}}",
 									"type": "string"
 								}
 							]
@@ -395,7 +492,7 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/game/1/play/5",
+							"raw": "localhost:8080/game/1/play/3",
 							"host": [
 								"localhost"
 							],
@@ -404,7 +501,38 @@
 								"game",
 								"1",
 								"play",
-								"5"
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Play Move  User 2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token_user_2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/game/1/play/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game",
+								"1",
+								"play",
+								"3"
 							]
 						}
 					},
@@ -418,7 +546,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_user_1}}",
 									"type": "string"
 								}
 							]
@@ -426,7 +554,7 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/game/forfeit/1",
+							"raw": "localhost:8080/game/forfeit/2",
 							"host": [
 								"localhost"
 							],
@@ -434,7 +562,7 @@
 							"path": [
 								"game",
 								"forfeit",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -448,7 +576,36 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{Token_user_1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/game/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Game Admin-Level",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token_admin}}",
 									"type": "string"
 								}
 							]

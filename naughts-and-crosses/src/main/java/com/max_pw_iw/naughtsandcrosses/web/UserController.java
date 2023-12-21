@@ -44,7 +44,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}/games")
-	public ResponseEntity<List<Game>> getAllGamesFromUser(@RequestParam Long id) {
+	public ResponseEntity<List<Game>> getAllGamesFromUser(@PathVariable Long id) {
 		return new ResponseEntity<>(userService.getAllGamesFromUser(id), HttpStatus.OK);
 	}
 
