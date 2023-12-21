@@ -21,6 +21,7 @@ import com.max_pw_iw.naughtsandcrosses.exception.GameNotActiveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalMoveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalUserJoinException;
 import com.max_pw_iw.naughtsandcrosses.exception.UserNotPlayerException;
+import com.max_pw_iw.naughtsandcrosses.exception.WrongTurnMoveException;
 
 
 @ControllerAdvice
@@ -32,7 +33,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalUserJoinException.class, IllegalMoveException.class, GameNotActiveException.class, UserNotPlayerException.class})
+    @ExceptionHandler({IllegalUserJoinException.class, IllegalMoveException.class, GameNotActiveException.class, UserNotPlayerException.class, WrongTurnMoveException.class})
     public ResponseEntity<Object> handleIllegalUserAction(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));  
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);

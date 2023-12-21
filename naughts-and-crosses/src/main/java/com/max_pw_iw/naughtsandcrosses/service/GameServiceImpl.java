@@ -19,6 +19,7 @@ import com.max_pw_iw.naughtsandcrosses.exception.GameNotActiveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalMoveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalUserJoinException;
 import com.max_pw_iw.naughtsandcrosses.exception.UserNotPlayerException;
+import com.max_pw_iw.naughtsandcrosses.exception.WrongTurnMoveException;
 import com.max_pw_iw.naughtsandcrosses.repository.GameRepository;
 // import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
 //import com.max_pw_iw.naughtsandcrosses.validation.Move;
@@ -155,8 +156,10 @@ public class GameServiceImpl implements GameService{
                         stringMove = stringMove.concat("1");
                         stringMove = stringMove.concat(game.isPrimaryUserOs() ? "O" : "X");
 
-                    } else{
+                    } else if (user != game.getSecondaryUser() && user != game.getPrimaryUser()){
                         throw new UserNotPlayerException(user);
+                    } else {
+                        throw new WrongTurnMoveException(user);
                     }
                 } else {
                     // else,
@@ -170,8 +173,10 @@ public class GameServiceImpl implements GameService{
                         stringMove = stringMove.concat("1");
                         stringMove = stringMove.concat(game.isPrimaryUserOs() ? "O" : "X");
 
-                    } else{
+                    } else if (user != game.getSecondaryUser() && user != game.getPrimaryUser()){
                         throw new UserNotPlayerException(user);
+                    } else {
+                        throw new WrongTurnMoveException(user);
                     }
                 }
 
