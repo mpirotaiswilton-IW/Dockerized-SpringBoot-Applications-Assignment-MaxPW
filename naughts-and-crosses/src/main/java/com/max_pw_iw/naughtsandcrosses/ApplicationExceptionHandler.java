@@ -20,6 +20,7 @@ import com.max_pw_iw.naughtsandcrosses.exception.ErrorResponse;
 import com.max_pw_iw.naughtsandcrosses.exception.GameNotActiveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalMoveException;
 import com.max_pw_iw.naughtsandcrosses.exception.IllegalUserJoinException;
+import com.max_pw_iw.naughtsandcrosses.exception.UserDeletingSelfException;
 import com.max_pw_iw.naughtsandcrosses.exception.UserNotPlayerException;
 import com.max_pw_iw.naughtsandcrosses.exception.WrongTurnMoveException;
 
@@ -33,7 +34,9 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalUserJoinException.class, IllegalMoveException.class, GameNotActiveException.class, UserNotPlayerException.class, WrongTurnMoveException.class})
+    @ExceptionHandler({IllegalUserJoinException.class, IllegalMoveException.class, 
+                        GameNotActiveException.class, WrongTurnMoveException.class, 
+                        UserDeletingSelfException.class})
     public ResponseEntity<Object> handleIllegalUserAction(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));  
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
@@ -49,6 +52,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         ErrorResponse error = new ErrorResponse(Arrays.asList("Data Integrity Violation: we cannot process your request."));  
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UserNotPlayerException.class})
+    public ResponseEntity<Object> handleIncorrectAccessException(DataIntegrityViolationException ex) {
+        ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));  
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @Override

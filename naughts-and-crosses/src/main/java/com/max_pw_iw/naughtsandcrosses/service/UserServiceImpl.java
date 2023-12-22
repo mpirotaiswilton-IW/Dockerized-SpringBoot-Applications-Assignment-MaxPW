@@ -15,6 +15,7 @@ import com.max_pw_iw.naughtsandcrosses.entity.Game;
 import com.max_pw_iw.naughtsandcrosses.entity.Role;
 import com.max_pw_iw.naughtsandcrosses.entity.User;
 import com.max_pw_iw.naughtsandcrosses.exception.EntityNotFoundException;
+import com.max_pw_iw.naughtsandcrosses.exception.UserDeletingSelfException;
 import com.max_pw_iw.naughtsandcrosses.repository.RoleRepository;
 import com.max_pw_iw.naughtsandcrosses.repository.UserRepository;
 
@@ -72,9 +73,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id, String username) {
         Optional<User> user = userRepository.findById(id);
         User unwrappedUser = unwrapUser(user, id);
+        User authenticatedUser = getUser(username);
+        if(unwrappedUser == authenticatedUser) {
+            throw new UserDeletingSelfException(id);
+        }
         userRepository.delete(unwrappedUser);
     }
 

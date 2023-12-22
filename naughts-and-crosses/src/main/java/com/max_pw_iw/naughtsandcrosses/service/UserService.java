@@ -17,6 +17,6 @@ public interface UserService extends UserDetailsService{
     List<Game> getAllGamesFromUser(Long id);
     User saveUser(UserRequest user);
     User addRoleToUser(Long id, Long roleId);
-    void deleteUser(Long id);
+    void deleteUser(Long id, String username);
     void deleteUser(String username);
 }
